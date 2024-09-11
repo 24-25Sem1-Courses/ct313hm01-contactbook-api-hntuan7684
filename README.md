@@ -6,9 +6,9 @@ Course: CT313H-Web Technologies and Services.
 
 Semester 1, Academic year: 2024-2025.
 
-**Student ID**: ...
+**Student ID**: B2112021
 
-**Student Name**: ...
+**Student Name**: Ha Nhut Tuan
 
-**Class Number**: ...
+**Class Number**: CT313H/M01
 
