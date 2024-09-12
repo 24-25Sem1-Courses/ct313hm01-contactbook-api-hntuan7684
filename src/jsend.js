@@ -1,12 +1,15 @@
+/* eslint-disable no-undef */
+
 /**
 * @param {object | null} data
 * @returns {{status: 'success', data: object | null}}
 */
+
 function success(data = null) {
-return {
-status: 'success',
-data: data,
-};
+    return {
+        status: 'success',
+        data: data
+    };
 }
 
 /**
@@ -19,12 +22,12 @@ function fail(message, data = null) {
         return {
             status: 'fail',
             message,
-            data,
+            data
         };
     }
     return {
         status: 'fail',
-        message,
+        message
     };
 }
 
@@ -39,16 +42,17 @@ function error(message, data = null) {
         return {
             status: 'error',
             message,
-            data,
+            data
         };
     }
     return {
         status: 'error',
-        message,};
+        message
+    };
 }
 
 module.exports = {
     success,
     fail,
-    error,
+    error
 }
