@@ -1,5 +1,4 @@
 const ApiError = require('../api-error');
-
 const JSend = require('../jsend');
 
 function methodNotAllowed(req, res, next) {
@@ -17,25 +16,27 @@ function methodNotAllowed(req, res, next) {
 }
 
 function resourceNotFound(req, res, next) {
-
     return next(new ApiError(404, 'Resource not found'));
 }
 
 function handleError(error, req, res, next) {
-
     if (res.headersSent) {
         return next(error);
     }
+
     const statusCode = error.statusCode || 500;
     const message = error.message || 'Internal Server Error';
+    const headers = error.headers || {};
+
+    // Set the headers from the error object
+    res.set(headers);
+
     return res
         .status(statusCode)
-        .set(error.headers || {})
         .json(
             statusCode >= 500 ? JSend.error(message) : JSend.fail(message)
         );
-
-};
+}
 
 module.exports = {
     methodNotAllowed,
