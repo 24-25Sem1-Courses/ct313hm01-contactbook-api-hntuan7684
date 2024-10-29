@@ -1,8 +1,8 @@
-require("dotenv").config();
+require('dotenv').config();
 const { DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME } = process.env;
 /**
- * @type { import("knex").Knex.Config }
- */
+* @type { import("knex").Knex.Config }
+*/
 module.exports = {
   client: "mysql",
   connection: {

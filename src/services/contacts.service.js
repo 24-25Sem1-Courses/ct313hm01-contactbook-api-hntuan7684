@@ -1,10 +1,12 @@
-const knex = require("../database/knex");
 const Paginator = require("./paginator");
+const knex = require("../database/knex");
 const { unlink } = require("node:fs");
 
 function contactRepository() {
   return knex("contacts");
 }
+// Define functions for accessing the database
+
 function readContact(payload) {
   return {
     name: payload.name,
@@ -17,7 +19,6 @@ function readContact(payload) {
 }
 
 // Define functions for accessing the database
-
 async function createContact(payload) {
   const contact = readContact(payload);
   const [id] = await contactRepository().insert(contact);
@@ -49,12 +50,14 @@ async function getManyContacts(query) {
     )
     .limit(paginator.limit)
     .offset(paginator.offset);
+
   let totalRecords = 0;
   results = results.map((result) => {
     totalRecords = result.recordCount;
     delete result.recordCount;
     return result;
   });
+
   return {
     metadata: paginator.getMetadata(totalRecords),
     contacts: results,
@@ -70,12 +73,12 @@ async function updateContact(id, payload) {
     .where("id", id)
     .select("*")
     .first();
+
   if (!updatedContact) {
     return null;
   }
 
   const update = readContact(payload);
-
   if (!update.avatar) {
     delete update.avatar;
   }
@@ -86,9 +89,9 @@ async function updateContact(id, payload) {
     update.avatar &&
     updatedContact.avatar &&
     update.avatar !== updatedContact.avatar &&
-    updatedContact.avatar.startswitch("/public/uploads")
+    updatedContact.avatar.startsWith("/public/uploads")
   ) {
-    unlink(`.${updatedContact.avatar}`, (err) => {});
+    unlink(`.${updatedContact.avatar}`, () => {});
   }
   return { ...updatedContact, ...update };
 }
@@ -98,26 +101,30 @@ async function deleteContact(id) {
     .where("id", id)
     .select("avatar")
     .first();
+
   if (!deletedContact) {
     return null;
   }
+
   await contactRepository().where("id", id).del();
 
   if (
     deletedContact.avatar &&
-    deletedContact.avatar.startswitch("/public/uploads")
+    deletedContact.avatar.startsWith("/public/uploads")
   ) {
-    unlink(`.${deletedContact.avatar}`, (err) => {});
+    unlink(`.${deletedContact.avatar}`, () => {});
   }
+
   return deletedContact;
 }
 
 async function deleteAllContacts() {
   const contacts = await contactRepository().select("avatar");
   await contactRepository().del();
+
   contacts.forEach((contact) => {
     if (contact.avatar && contact.avatar.startsWith("/public/uploads")) {
-      unlink(`.${contact.avatar}`, (err) => {});
+      unlink(`.${contact.avatar}`, () => {});
     }
   });
 }
@@ -129,5 +136,5 @@ module.exports = {
   getContactById,
   updateContact,
   deleteContact,
-  deleteAllContacts
+  deleteAllContacts,
 };
